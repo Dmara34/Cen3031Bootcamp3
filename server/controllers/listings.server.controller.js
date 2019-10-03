@@ -56,28 +56,56 @@ exports.read = function(req, res) {
 /* Update a listing - note the order in which this function is called by the router*/
 exports.update = function(req, res) {
   var listing = req.listing;
-
   /* Replace the listings's properties with the new properties found in req.body */
- 
-  /*save the coordinates (located in req.results if there is an address property) */
- 
+  Listing.findOneAndUpdate({code: listing.code}, {
+    name: req.body.name,    
+    code:  req.body.code,
+    address: req.body.address,   
+  },{new: true}).exec(function(err, listing) {
+   /*save the coordinates (located in req.results if there is an address property) */  
+  if(req.results) {
+    listing.coordinates = {
+    latitude: req.results.lat, 
+    longitude: req.results.lng
+    };
+  }
   /* Save the listing */
-
+    listing.save(function(err) {
+    if(err) {
+      console.log(err);
+      res.status(400).send(err);
+    } else {
+      res.json(listing);      
+    }
+    });
+  });
 };
-
 /* Delete a listing */
 exports.delete = function(req, res) {
   var listing = req.listing;
-
+  Listing.deleteOne({name: listing.name}).exec(function(err, listing) {
+  if(err) {
+    res.status(400).send(err);
+  } else {      
+    res.json(listing);
+  }
+  });
   /* Add your code to remove the listins */
-
 };
 
 /* Retreive all the directory listings, sorted alphabetically by listing code */
 exports.list = function(req, res) {
   /* Add your code */
-};
 
+    Listing.find().sort('code').exec(function(err, listing) {
+    if(err) {
+      res.status(400).send(err);
+    } else {
+      res.json(listing);      
+    }
+   
+  });
+};
 /* 
   Middleware: find a listing by its ID, then pass it to the next request handler. 
 

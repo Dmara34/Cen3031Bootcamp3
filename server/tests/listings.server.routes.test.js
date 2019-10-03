@@ -130,7 +130,7 @@ describe('Listings CRUD tests', function() {
         should.exist(res.body._id);
         res.body.name.should.equal('Dr. Gardner-McCunes Office');
         res.body.code.should.equal('GMC');
-        res.body.address.should.equal('432 Newell Dr, Gainesville, FL 32611');
+        res.body.address.should.equal('432 Newell Dr, Gainesville, FL 32611');        
         res.body.coordinates.latitude.should.equal(28.75054);
         res.body.coordinates.longitude.should.equal(-82.5001);
         id2 = res.body._id;
@@ -157,7 +157,7 @@ describe('Listings CRUD tests', function() {
     if(id) {
       Listing.deleteOne({_id: id}, function(err){
         if(err) throw err;
-        next();
+        done();
       }); 
     }if(id2) {
       Listing.deleteOne({_id: id2}, function(err){
